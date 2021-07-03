@@ -1,56 +1,80 @@
 package com.pets.fibicado.petadoption.controller;
 
+import com.pets.fibicado.petadoption.dao.BreedDAO;
+import com.pets.fibicado.petadoption.dao.CustomerDAO;
+import com.pets.fibicado.petadoption.dao.PetDAO;
+import com.pets.fibicado.petadoption.dao.PetTypeDAO;
 import com.pets.fibicado.petadoption.model.Customer;
 import com.pets.fibicado.petadoption.model.Pet;
-import com.pets.fibicado.petadoption.repository.CustomerRepository;
-import com.pets.fibicado.petadoption.repository.PetRepository;
+import com.pets.fibicado.petadoption.model.Breed;
+import com.pets.fibicado.petadoption.model.PetType;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class PetAdoptionController {
 
-    @Autowired
-    private PetRepository petRepository;
 
     @Autowired
-    private CustomerRepository customerRepository;
+    private CustomerDAO customerDAO;
+    @Autowired
+    private BreedDAO breedDAO;
+    @Autowired
+    private PetTypeDAO petTypeDAO;
+    @Autowired
+    private PetDAO petDAO;
 
 
     @GetMapping(path = "/pets")
     public List<Pet> getAllPetsData(){
-        List<Pet> petList = new ArrayList<>();
-        Iterable<Pet> iterablePets = petRepository.findAll();
-        iterablePets.forEach(petList::add);
-        return petList;
+       return petDAO.getAllPets();
     }
+
+
+    @GetMapping(path = "/breeds")
+    public List<Breed> getAllBreedsData(){
+        return breedDAO.getAllBreeds();
+    }
+
+
+    @GetMapping(path = "/pettypes")
+    public List<PetType> getAllPetTypesData(){
+        return petTypeDAO.getAllPetTypes();
+    }
+
 
     @GetMapping(path = "/customers")
     public List<Customer> getAllCustomersData(){
-        List<Customer> CustomerList = new ArrayList<>();
-        Iterable<Customer> iterableCustomers = customerRepository.findAll();
-        iterableCustomers.forEach(CustomerList::add);
-        return CustomerList;
+        return customerDAO.getAllCustomers();
+    }
+
+    @GetMapping(path = "/customers/{customerId}")
+    public Optional<Customer> getCustomerById(@PathVariable Integer customerId){
+         return customerDAO.getCustomerById(customerId);
     }
 
     @PostMapping(path = "/customer")
-    public long createCustomer(@Valid @RequestBody Customer customer){
-        Customer savedCustomer = customerRepository.save(customer);
-        return savedCustomer.getCustomerId();
+    public Customer createCustomer(@Valid @RequestBody Customer customer){
+        return customerDAO.insertNewCustomer(customer);
     }
 
     @PostMapping(path = "/pets")
-    public long createPet(@Valid @RequestBody Pet pet){
-        long customerId = pet.getCustomer().getCustomerId();
-        Customer customer = customerRepository.getById(customerId);
-        Pet savedPet = petRepository.save(pet);
-        return savedPet.getPetId();
+    public Pet createPet(@Valid @RequestBody Pet pet) throws Exception {
+        return petDAO.insertNewPet(pet);
     }
 
+    @PostMapping(path = "/pettypes")
+    public PetType createPetType(@Valid @RequestBody PetType petType){
+        return petTypeDAO.insertNewPetType(petType);
+    }
+
+    @PostMapping(path = "/breeds")
+    public Breed createBreed(@Valid @RequestBody Breed breed){
+        return breedDAO.insertNewBreed(breed);
+    }
 }

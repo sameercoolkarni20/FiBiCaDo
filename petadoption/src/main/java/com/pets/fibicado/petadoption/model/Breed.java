@@ -6,22 +6,16 @@ import javax.persistence.*;
 
 @Entity
 @Data
-public class Pet {
+public class Breed {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long petId;
+    private long breedId;
 
-    private String petName;
     @OneToOne
     private PetType petType;
-    @OneToOne
-    private Breed breed;
 
-    private Integer ageInMonths;
+    private String breedName;
 
-    @OneToOne
-    private Customer customer;
-
-    public Pet(){}
-
+    public Breed(){}
 }
