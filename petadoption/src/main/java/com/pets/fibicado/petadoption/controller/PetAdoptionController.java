@@ -47,6 +47,10 @@ public class PetAdoptionController {
         return petTypeDAO.getAllPetTypes();
     }
 
+    @GetMapping(path = "/pettypes/{petType}")
+    public List<PetType> getPetTypeByName(@PathVariable String petType){
+        return petTypeDAO.getPetTypeByName(petType);
+    }
 
     @GetMapping(path = "/customers")
     public List<Customer> getAllCustomersData(){
@@ -54,9 +58,21 @@ public class PetAdoptionController {
     }
 
     @GetMapping(path = "/customers/{customerId}")
-    public Optional<Customer> getCustomerById(@PathVariable Integer customerId){
+    public Optional<Customer> getBreedsByPetType(@PathVariable Integer customerId){
          return customerDAO.getCustomerById(customerId);
     }
+
+    @GetMapping(path = "/breeds/{petType}")
+    public List<Breed> getBreedsByPetType(@PathVariable String petType){
+        return breedDAO.getAllBreedsOfPetType(petType);
+    }
+
+    @GetMapping(path = "/pets/{customerID}")
+    public List<Pet> getAllPetsForCustomer(@PathVariable Integer customerID){
+        return petDAO.getAllPetsForCustomer(customerID);
+    }
+
+
 
     @PostMapping(path = "/customer")
     public Customer createCustomer(@Valid @RequestBody Customer customer){
@@ -77,4 +93,7 @@ public class PetAdoptionController {
     public Breed createBreed(@Valid @RequestBody Breed breed){
         return breedDAO.insertNewBreed(breed);
     }
+
+
+
 }

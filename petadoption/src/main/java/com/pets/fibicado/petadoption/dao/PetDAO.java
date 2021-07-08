@@ -5,11 +5,13 @@ import com.pets.fibicado.petadoption.model.Customer;
 import com.pets.fibicado.petadoption.model.Pet;
 import com.pets.fibicado.petadoption.model.PetType;
 import com.pets.fibicado.petadoption.repository.PetRepository;
+import com.pets.fibicado.petadoption.repository.specification.PetSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
+
 
 @Component
 public class PetDAO {
@@ -98,4 +100,8 @@ public class PetDAO {
         return isValidPet;
     }
 
+    public List<Pet> getAllPetsForCustomer(Integer customerID) {
+       return petRepository.findAll(PetSpecification.getPetListForCustomer(customerID));
+
+    }
 }

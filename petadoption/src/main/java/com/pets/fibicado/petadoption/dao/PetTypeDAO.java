@@ -3,6 +3,7 @@ package com.pets.fibicado.petadoption.dao;
 import com.pets.fibicado.petadoption.model.Breed;
 import com.pets.fibicado.petadoption.model.PetType;
 import com.pets.fibicado.petadoption.repository.PetTypeRepository;
+import com.pets.fibicado.petadoption.repository.specification.BreedSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -34,4 +35,9 @@ public class PetTypeDAO {
         }
 
     }
+
+    public List<PetType> getPetTypeByName(String petTypeName){
+        return petTypeRepository.findAll(BreedSpecification.getPetTypeSpecification(petTypeName));
+    }
+
 }
