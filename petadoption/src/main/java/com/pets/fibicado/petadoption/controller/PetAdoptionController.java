@@ -1,13 +1,11 @@
 package com.pets.fibicado.petadoption.controller;
 
+import com.pets.fibicado.petadoption.authentication.JwtTokenUtil;
 import com.pets.fibicado.petadoption.dao.BreedDAO;
 import com.pets.fibicado.petadoption.dao.CustomerDAO;
 import com.pets.fibicado.petadoption.dao.PetDAO;
 import com.pets.fibicado.petadoption.dao.PetTypeDAO;
-import com.pets.fibicado.petadoption.model.Customer;
-import com.pets.fibicado.petadoption.model.Pet;
-import com.pets.fibicado.petadoption.model.Breed;
-import com.pets.fibicado.petadoption.model.PetType;
+import com.pets.fibicado.petadoption.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+
 public class PetAdoptionController {
 
 
@@ -29,18 +28,15 @@ public class PetAdoptionController {
     @Autowired
     private PetDAO petDAO;
 
-
     @GetMapping(path = "/pets")
     public List<Pet> getAllPetsData(){
        return petDAO.getAllPets();
     }
 
-
     @GetMapping(path = "/breeds")
     public List<Breed> getAllBreedsData(){
         return breedDAO.getAllBreeds();
     }
-
 
     @GetMapping(path = "/pettypes")
     public List<PetType> getAllPetTypesData(){
@@ -72,8 +68,6 @@ public class PetAdoptionController {
         return petDAO.getAllPetsForCustomer(customerID);
     }
 
-
-
     @PostMapping(path = "/customer")
     public Customer createCustomer(@Valid @RequestBody Customer customer){
         return customerDAO.insertNewCustomer(customer);
@@ -94,6 +88,12 @@ public class PetAdoptionController {
         return breedDAO.insertNewBreed(breed);
     }
 
-
+    @PostMapping(path = "/logout")
+    public String logout(@RequestBody LogoutRequest request){
+        String token = request.getJwtToken();
+        String username = request.getUsername();
+        JwtTokenUtil.logoutUserToken(token);
+        return "User "+username+" is logged out .Token is invalidated ";
+    }
 
 }
